@@ -1,0 +1,87 @@
+
+<template>
+    <div>
+        <div class="form-group">
+            <router-link to="/" class="btn btn-default">Retour</router-link>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Modifier produit</div>
+            <div class="panel-body">
+                <form v-on:submit.prevent="saveForm()">
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">Produit name</label>
+                            <input type="text" v-model="produit.name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">Produit address</label>
+                            <input type="text" v-model="produit.address" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">Produit website</label>
+                            <input type="text" v-model="produit.website" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label">Produit email</label>
+                            <input type="text" v-model="produit.email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <button class="btn btn-success">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        mounted() {
+            let app = this;
+            let id = app.$route.params.id;
+            app.produitId = id;
+            axios.get('api/v1/produits/' + id)
+                .then(function (resp) {
+                    app.produit = resp.data;
+                })
+                .catch(function () {
+                    alert("Could not load your produit")
+                });
+        },
+        data: function () {
+            return {
+                produitId: null,
+                produit: {
+                    name: '',
+                    address: '',
+                    website: '',
+                    email: '',
+                }
+            }
+        },
+        methods: {
+            saveForm() {
+                var app = this;
+                var newProduit = app.produit;
+                axios.patch('api/v1/produits/' + app.produitId, newProduit)
+                    .then(function (resp) {
+                        app.$router.replace('/');
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        alert("Could not create your produit");
+                    });
+            }
+        }
+    }
+</script>
