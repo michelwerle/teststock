@@ -79,7 +79,7 @@ class ProduitOldController extends Controller
             'prix' =>  'required|numeric',
         ]);
 
-        $produit->update($request->all());
+        //$produit->update($request->all());
 
 
     }

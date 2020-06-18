@@ -1952,16 +1952,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       produit: {
-        name: '',
-        address: '',
-        website: '',
-        email: ''
+        nom: '',
+        description: '',
+        prix: 1,
+        quantite: 1
       }
     };
   },
@@ -1973,9 +1971,14 @@ __webpack_require__.r(__webpack_exports__);
         app.$router.push({
           path: '/'
         });
-      })["catch"](function (resp) {
-        console.log(resp);
-        alert("Could not create your produit");
+      })["catch"](function (data) {
+        var response = JSON.parse(data.responseText);
+        var errorString = '<ul>';
+        $.each(response.errors, function (key, value) {
+          errorString += '<li>' + value + '</li>';
+        });
+        errorString += '</ul>';
+        document.getElementByClassName('form').prepend('<div class="alert alert-danger"><a class="btn btn-small text-danger close"><i class="fas fa-times"></i></a><p>' + errorString + '</p></div>');
       });
     }
   }
@@ -2036,8 +2039,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     var app = this;
@@ -2046,17 +2047,17 @@ __webpack_require__.r(__webpack_exports__);
     axios.get('api/v1/produits/' + id).then(function (resp) {
       app.produit = resp.data;
     })["catch"](function () {
-      alert("Could not load your produit");
+      alert("Impossible de charger les produits");
     });
   },
   data: function data() {
     return {
       produitId: null,
       produit: {
-        name: '',
-        address: '',
-        website: '',
-        email: ''
+        nom: '',
+        description: '',
+        prix: 1,
+        quantite: 1
       }
     };
   },
@@ -2066,9 +2067,16 @@ __webpack_require__.r(__webpack_exports__);
       var newProduit = app.produit;
       axios.patch('api/v1/produits/' + app.produitId, newProduit).then(function (resp) {
         app.$router.replace('/');
-      })["catch"](function (resp) {
-        console.log(resp);
-        alert("Could not create your produit");
+      })["catch"](function (data) {
+        var response = JSON.parse(data.responseText);
+        console.log(data);
+        console.log(response);
+        var errorString = '<ul>';
+        $.each(response.errors, function (key, value) {
+          errorString += '<li>' + value + '</li>';
+        });
+        errorString += '</ul>';
+        document.getElementByClassName('form').prepend('<div class="alert alert-danger"><a class="btn btn-small text-danger close"><i class="fas fa-times"></i></a><p>' + errorString + '</p></div>');
       });
     }
   }
@@ -2140,17 +2148,17 @@ __webpack_require__.r(__webpack_exports__);
       app.produits = resp.data;
     })["catch"](function (resp) {
       console.log(resp);
-      alert("Could not load produits");
+      alert("Impossible de charger les produits");
     });
   },
   methods: {
     deleteEntry: function deleteEntry(id, index) {
-      if (confirm("Do you really want to delete it?")) {
+      if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
         var app = this;
         axios["delete"]('api/v1/produits/' + id).then(function (resp) {
           app.produits.splice(index, 1);
         })["catch"](function (resp) {
-          alert("Could not delete produit");
+          alert("Impossible de supprimer ce produit");
         });
       }
     }
@@ -37709,154 +37717,147 @@ var render = function() {
       [
         _c(
           "router-link",
-          { staticClass: "btn btn-default", attrs: { to: "/" } },
-          [_vm._v("Back")]
+          { staticClass: "btn btn-secondary", attrs: { to: "/" } },
+          [_vm._v("Retour")]
         )
       ],
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-heading" }, [
-        _vm._v("Create new produit")
-      ]),
+    _c("div", { staticClass: "panel" }, [
+      _c("h3", [_vm._v("Créer un nouveau produit")]),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-body" }, [
-        _c(
-          "form",
-          {
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.saveForm()
-              }
+      _c(
+        "form",
+        {
+          staticClass: "form",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.saveForm()
             }
-          },
-          [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit name")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.name,
-                      expression: "produit.name"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.name },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "name", $event.target.value)
-                    }
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [_vm._v("Nom")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.nom,
+                    expression: "produit.nom"
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit address")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.address,
-                      expression: "produit.address"
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.nom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.address },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "address", $event.target.value)
-                    }
+                    _vm.$set(_vm.produit, "nom", $event.target.value)
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit website")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.website,
-                      expression: "produit.website"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.website },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "website", $event.target.value)
-                    }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [
+                _vm._v("Description")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.description,
+                    expression: "produit.description"
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit email")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.email,
-                      expression: "produit.email"
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.description },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "email", $event.target.value)
-                    }
+                    _vm.$set(_vm.produit, "description", $event.target.value)
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ]
-        )
-      ])
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [_vm._v("Prix")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.prix,
+                    expression: "produit.prix"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.prix },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.produit, "prix", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [
+                _vm._v("Quantité")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.quantite,
+                    expression: "produit.quantite"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "number", step: "1" },
+                domProps: { value: _vm.produit.quantite },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.produit, "quantite", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      )
     ])
   ])
 }
@@ -37867,7 +37868,10 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Create")])
+        _c("button", { staticClass: "btn btn-success" }, [
+          _c("i", { staticClass: "fas fa-save" }),
+          _vm._v(" Enregistrer")
+        ])
       ])
     ])
   }
@@ -37900,152 +37904,147 @@ var render = function() {
       [
         _c(
           "router-link",
-          { staticClass: "btn btn-default", attrs: { to: "/" } },
-          [_vm._v("Back")]
+          { staticClass: "btn btn-secondary", attrs: { to: "/" } },
+          [_vm._v("Retour")]
         )
       ],
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-heading" }, [_vm._v("Edit produit")]),
+    _c("div", { staticClass: "panel" }, [
+      _c("h3", [_vm._v("Modifier produit")]),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-body" }, [
-        _c(
-          "form",
-          {
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.saveForm()
-              }
+      _c(
+        "form",
+        {
+          staticClass: "form",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.saveForm()
             }
-          },
-          [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit name")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.name,
-                      expression: "produit.name"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.name },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "name", $event.target.value)
-                    }
+          }
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [_vm._v("Nom")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.nom,
+                    expression: "produit.nom"
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit address")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.address,
-                      expression: "produit.address"
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.nom },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.address },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "address", $event.target.value)
-                    }
+                    _vm.$set(_vm.produit, "nom", $event.target.value)
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit website")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.website,
-                      expression: "produit.website"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.website },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "website", $event.target.value)
-                    }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [
+                _vm._v("Description")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.description,
+                    expression: "produit.description"
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Produit email")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.produit.email,
-                      expression: "produit.email"
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.description },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text" },
-                  domProps: { value: _vm.produit.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.produit, "email", $event.target.value)
-                    }
+                    _vm.$set(_vm.produit, "description", $event.target.value)
                   }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ]
-        )
-      ])
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [_vm._v("Prix")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.prix,
+                    expression: "produit.prix"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.produit.prix },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.produit, "prix", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("label", { staticClass: "control-label" }, [
+                _vm._v("Quantité")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.produit.quantite,
+                    expression: "produit.quantite"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "number", step: "1" },
+                domProps: { value: _vm.produit.quantite },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.produit, "quantite", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      )
     ])
   ])
 }
@@ -38056,7 +38055,10 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Update")])
+        _c("button", { staticClass: "btn btn-success" }, [
+          _c("i", { staticClass: "fas fa-save" }),
+          _vm._v(" Enregistrer")
+        ])
       ])
     ])
   }
@@ -38093,14 +38095,19 @@ var render = function() {
             staticClass: "btn btn-success",
             attrs: { to: { name: "createProduit" } }
           },
-          [_vm._v("Create new produit")]
+          [
+            _c("i", { staticClass: "fas fa-plus-circle" }),
+            _vm._v(" Ajouter un produit")
+          ]
         )
       ],
       1
     ),
     _vm._v(" "),
     _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-heading" }, [_vm._v("Produits list")]),
+      _c("h3", { staticClass: "panel-heading" }, [
+        _vm._v("Liste des produits")
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-body" }, [
         _c("table", { staticClass: "table table-bordered table-striped" }, [
@@ -38110,13 +38117,13 @@ var render = function() {
             "tbody",
             _vm._l(_vm.produits, function(produit, index) {
               return _c("tr", [
-                _c("td", [_vm._v(_vm._s(produit.name))]),
+                _c("td", [_vm._v(_vm._s(produit.nom))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(produit.address))]),
+                _c("td", [_vm._v(_vm._s(produit.description))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(produit.website))]),
+                _c("td", [_vm._v(_vm._s(produit.prix))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(produit.email))]),
+                _c("td", [_vm._v(_vm._s(produit.quantite))]),
                 _vm._v(" "),
                 _c(
                   "td",
@@ -38124,7 +38131,7 @@ var render = function() {
                     _c(
                       "router-link",
                       {
-                        staticClass: "btn btn-xs btn-default",
+                        staticClass: "btn btn-xs btn-warning",
                         attrs: {
                           to: {
                             name: "editProduit",
@@ -38132,11 +38139,7 @@ var render = function() {
                           }
                         }
                       },
-                      [
-                        _vm._v(
-                          "\n                            Edit\n                        "
-                        )
-                      ]
+                      [_c("i", { staticClass: "fas fa-edit" })]
                     ),
                     _vm._v(" "),
                     _c(
@@ -38150,11 +38153,7 @@ var render = function() {
                           }
                         }
                       },
-                      [
-                        _vm._v(
-                          "\n                            Delete\n                        "
-                        )
-                      ]
+                      [_c("i", { staticClass: "fas fa-trash-alt" })]
                     )
                   ],
                   1
@@ -38175,15 +38174,15 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Name")]),
+        _c("th", [_vm._v("Nom")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Address")]),
+        _c("th", [_vm._v("Description")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Website")]),
+        _c("th", [_vm._v("Prix")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Email")]),
+        _c("th", [_vm._v("Quantité")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "100" } }, [_vm._v(" ")])
+        _c("th", [_vm._v(" ")])
       ])
     ])
   }

@@ -3,11 +3,11 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Produits</div>
+            <div class="col-md-8 col-md-offset-2 card">
+                <div class="card-body">
+                    <div class="card-title">Produits</div>
 
-                    <div class="panel-body table-responsive">
+                    <div class="card-text">
 
                         <router-view name="produitsIndex"></router-view>
                         <router-view></router-view>

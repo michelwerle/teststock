@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="form-group">
-            <router-link :to="{name: 'createProduit'}" class="btn btn-success">Ajouter un produit</router-link>
+            <router-link :to="{name: 'createProduit'}" class="btn btn-success"><i class="fas fa-plus-circle"></i> Ajouter un produit</router-link>
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Liste des produits</div>
+            <h3 class="panel-heading">Liste des produits</h3>
             <div class="panel-body">
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -14,7 +14,7 @@
                         <th>Description</th>
                         <th>Prix</th>
                         <th>Quantité</th>
-                        <th width="100">&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -24,13 +24,13 @@
                         <td>{{ produit.prix }}</td>
                         <td>{{ produit.quantite }}</td>
                         <td>
-                            <router-link :to="{name: 'editProduit', params: {id: produit.id}}" class="btn btn-xs btn-default">
-                                Edit
+                            <router-link :to="{name: 'editProduit', params: {id: produit.id}}" class="btn btn-xs btn-warning">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                             <a href="#"
                                class="btn btn-xs btn-danger"
                                v-on:click="deleteEntry(produit.id, index)">
-                                Delete
+                                <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                     </tr>
@@ -56,19 +56,19 @@
                 })
                 .catch(function (resp) {
                     console.log(resp);
-                    alert("Could not load produits");
+                    alert("Impossible de charger les produits");
                 });
         },
         methods: {
             deleteEntry(id, index) {
-                if (confirm("Do you really want to delete it?")) {
+                if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
                     var app = this;
                     axios.delete('api/v1/produits/' + id)
                         .then(function (resp) {
                             app.produits.splice(index, 1);
                         })
                         .catch(function (resp) {
-                            alert("Could not delete produit");
+                            alert("Impossible de supprimer ce produit");
                         });
                 }
             }

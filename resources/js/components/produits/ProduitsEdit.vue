@@ -2,44 +2,42 @@
 <template>
     <div>
         <div class="form-group">
-            <router-link to="/" class="btn btn-default">Retour</router-link>
+            <router-link to="/" class="btn btn-secondary">Retour</router-link>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">Modifier produit</div>
-            <div class="panel-body">
-                <form v-on:submit.prevent="saveForm()">
+        <div class="panel">
+            <h3>Modifier produit</h3>
+                <form v-on:submit.prevent="saveForm()" class="form">
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Produit name</label>
-                            <input type="text" v-model="produit.name" class="form-control">
+                            <label class="control-label">Nom</label>
+                            <input type="text" v-model="produit.nom" class="form-control">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Produit address</label>
-                            <input type="text" v-model="produit.address" class="form-control">
+                            <label class="control-label">Description</label>
+                            <input type="text" v-model="produit.description" class="form-control">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Produit website</label>
-                            <input type="text" v-model="produit.website" class="form-control">
+                            <label class="control-label">Prix</label>
+                            <input type="text" v-model="produit.prix" class="form-control">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Produit email</label>
-                            <input type="text" v-model="produit.email" class="form-control">
+                            <label class="control-label">Quantité</label>
+                            <input type="number" v-model="produit.quantite" class="form-control" step="1">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <button class="btn btn-success">Update</button>
+                            <button class="btn btn-success"><i class="fas fa-save"></i> Enregistrer</button>
                         </div>
                     </div>
                 </form>
-            </div>
         </div>
     </div>
 </template>
@@ -55,17 +53,17 @@
                     app.produit = resp.data;
                 })
                 .catch(function () {
-                    alert("Could not load your produit")
+                    alert("Impossible de charger les produits")
                 });
         },
         data: function () {
             return {
                 produitId: null,
                 produit: {
-                    name: '',
-                    address: '',
-                    website: '',
-                    email: '',
+                    nom: '',
+                    description: '',
+                    prix: 1,
+                    quantite: 1,
                 }
             }
         },
@@ -77,9 +75,13 @@
                     .then(function (resp) {
                         app.$router.replace('/');
                     })
-                    .catch(function (resp) {
-                        console.log(resp);
-                        alert("Could not create your produit");
+                    .catch(function (data) {
+                        var errorString = '<ul>';
+                        var response = JSON.parse(data.responseText, function (key, value) {
+                            errorString += '<li>' + value + '</li>';
+                        });
+                        errorString += '</ul>';
+                        document.getElementByClassName('form').prepend('<div class="alert alert-danger"><a class="btn btn-small text-danger close"><i class="fas fa-times"></i></a><p>' + errorString + '</p></div>');
                     });
             }
         }
