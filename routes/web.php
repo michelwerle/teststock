@@ -20,5 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth'], 'as' => 'admin.'], function () {
+    Route::get('produits/{id}/stats', 'ProduitsController@statistiques');
+
     Route::get('produits', 'ProduitsController@index')->name('produits.index');
+
 });

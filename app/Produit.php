@@ -11,6 +11,6 @@ class Produit extends Model
     protected $dateFormat = 'Y-m-d H:i:s';
 
     public function mouvements(){
-        return $this->hasMany('App\Mouvements');
+        return $this->hasMany('App\Mouvement')->orderBy('created_at');
     }
 }

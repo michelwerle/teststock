@@ -18,6 +18,46 @@ class ProduitsController extends Controller
     public function show($id)
     {
         return Produit::findOrFail($id);
+
+    }
+
+    public function statistiques($id)
+    {
+        $produit = Produit::findOrFail($id);
+
+        $colors = [
+            'prix' => 'rgba(249,49,0,.9)',
+            'quantite' => 'rgba(249,170,0,.95)'
+        ];
+
+        //chart
+        $mouvements = array();
+        foreach($produit->mouvements as $mouvement){
+            //$old = json_decode($mouvement->old);
+            $new = json_decode($mouvement->new);
+            foreach($new as $key=>$value){
+                if($key=="prix" || $key=="quantite")
+                    $mouvements[$key][] = $value;
+            }
+        }
+
+        $data = array(
+             'labels' => $produit->mouvements->pluck('created_at')->toArray(),
+             'datasets' => array()
+        );
+
+        foreach($mouvements as $label=>$values){
+            $data['datasets'][] = array(
+                'label' => $label,
+                'data' => $values,
+                'borderColor' => $colors[$label],
+                'yAxisID' => $label,
+                'backgroundColor' => 'rgba(255,255,255,0)'
+            ) ;
+        }
+
+
+        return $data;
     }
 
     public function update(Request $request, $id)

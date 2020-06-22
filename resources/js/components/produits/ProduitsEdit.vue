@@ -33,11 +33,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-12 form-group d-flex justify-content-between">
                             <button class="btn btn-success"><i class="fas fa-save"></i> Enregistrer</button>
+                            <router-link :to="{name: 'ChartContainer'}" class="btn btn-secondary"><i class="fas fa-chart-line"></i> Mouvements de stock</router-link>
                         </div>
                     </div>
                 </form>
+
+
         </div>
     </div>
 </template>
